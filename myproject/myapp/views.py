@@ -2,8 +2,10 @@ from django.shortcuts import render
 from .models import Tree, PlantingArea, PlantingPlan
 from django.contrib.auth.decorators import login_required
 
+
 def home(request):
-    return render(request, 'plantapp/home.html')
+    return render(request, 'home.html')
+
 
 @login_required
 def tree_list(request):
