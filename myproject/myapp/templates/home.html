@@ -1,11 +1,139 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Home | ปลูกต้นไม้ทางไกล</title>
+  <meta charset="UTF-8">
+  <title>Plook Jing - Home</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #2E742B 0%, #D4F5C4 100%);
+    }
+
+    .hero {
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      padding: 80px 60px;
+      height: 100vh;
+      box-sizing: border-box;
+    }
+
+    .rounded-bg {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      width: 52%;
+      height: calc(100% - 100px);
+      background-color: #ffffff;
+      border-top-left-radius: 180px;
+      border-bottom-left-radius: 0px;
+      z-index: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .tree-image {
+      max-width: 90%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .hero-text {
+      position: relative;
+      z-index: 1;
+      color: white;
+      max-width: 50%;
+      margin-top: 80px;
+    }
+
+    .hero-text h1 {
+      font-size: 4.5rem;
+      margin: 0;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .hero-text p {
+      font-size: 1.25rem;
+      margin-top: 20px;
+      max-width: 480px;
+    }
+
+    .button {
+      display: inline-block;
+      margin-top: 50px;
+      padding: 14px 32px;
+      background-color: transparent;
+      color: #FFD700;
+      border: 2px solid #FFD700;
+      font-weight: bold;
+      border-radius: 32px;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .button:hover {
+      background-color: rgba(255, 215, 0, 0.1);
+      color: black;
+    }
+
+    .auth-bar {
+      position: absolute;
+      top: 20px;
+      right: 40px;
+      z-index: 999;
+    }
+
+    .auth-bar a {
+      padding: 10px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .login-btn {
+      background-color: #2e742b;
+      color: white;
+    }
+
+    .logout-btn {
+      background-color: white;
+      color: #2e742b;
+      border: 2px solid #2e742b;
+    }
+  </style>
 </head>
 <body>
-    <h1>ยินดีต้อนรับสู่ระบบปลูกต้นไม้ทางใกล้ 🌱</h1>
-    <p>ระบบนี้ช่วยให้คุณสามารถเลือกต้นไม้ พื้นที่ และแผนการปลูกได้อย่างง่ายดาย</p>
-    <a href="/admin/">เข้าสู่ระบบผู้ดูแล</a>
+
+  <!-- ✅ ปุ่ม Login/Logout -->
+  <div class="auth-bar">
+    {% if user.is_authenticated %}
+      <a href="{% url 'logout' %}" class="logout-btn">Log out</a>
+    {% else %}
+      <a href="{% url 'login' %}" class="login-btn">Log in</a>
+    {% endif %}
+  </div>
+
+  <div class="hero">
+    <div class="rounded-bg">
+      <img src="{% static 'myapp/images/tree.png' %}" alt="Tree Image" class="tree-image">
+    </div>
+
+    <div class="hero-text">
+      <h1>PLOOK JING</h1>
+      <p>The fascinating and meaningful world of tree planting. Let nature thrive with you, beautifully and sustainably.</p>
+      <!-- ✅ เปลี่ยนลิงก์มาที่ shop -->
+      <a href="{% url 'myapp:shop' %}" class="button">Shop Now</a>
+    </div>
+  </div>
+
 </body>
 </html>

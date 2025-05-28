@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="bg-gradient-to-br from-green-50 to-yellow-50 min-h-screen py-20">
+  <div class="max-w-4xl mx-auto px-4">
+    <h1 class="text-4xl font-bold text-center text-green-800 mb-16">🛒 เลือกหมวดหมู่สินค้าของคุณ</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+      <!-- 🌳 ตัวเลือกต้นไม้ -->
+      <div class="bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center text-center hover:shadow-2xl transition">
+        <img src="/static/images/tree.jpg" alt="ต้นไม้" class="w-full h-40 object-cover rounded-xl mb-4">
+        <h2 class="text-2xl font-semibold text-green-700">🌳 ต้นไม้ให้ปลูก</h2>
+        <p class="text-gray-600 mt-2 mb-4">เลือกต้นไม้ที่คุณต้องการปลูกเพื่อฟื้นฟูธรรมชาติ</p>
+        <a href="{% url 'myapp:tree_list' %}" class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg mt-auto">
+          ดูรายการต้นไม้
+        </a>
+      </div>
+
+      <!-- 🧰 ตัวเลือกอุปกรณ์ -->
+      <div class="bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center text-center hover:shadow-2xl transition">
+        <img src="/static/images/equiment.jpg" alt="อุปกรณ์" class="w-full h-40 object-cover rounded-xl mb-4">
+        <h2 class="text-2xl font-semibold text-orange-600">🧰 อุปกรณ์การปลูก</h2>
+        <p class="text-gray-600 mt-2 mb-4">เลือกซื้ออุปกรณ์ปลูกต้นไม้ที่จำเป็น</p>
+        <a href="{% url 'myapp:equipment_list' %}" class="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2 rounded-lg mt-auto">
+          ดูรายการอุปกรณ์
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

@@ -6,6 +6,7 @@ class Tree(models.Model):
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to='trees/', blank=True, null=True)
     care_instructions = models.TextField(help_text="วิธีดูแลต้นไม้ เช่น รดน้ำ ใส่ปุ๋ย")
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)  # ✅ เพิ่มตรงนี้
 
     def __str__(self):
         return self.name
@@ -33,13 +34,21 @@ class PlantingPlan(models.Model):
     def __str__(self):
         return f"{self.get_plan_type_display()} - {self.user.username}"
 
-# --- เติมส่วนเสริมเพื่อเพิ่มความสะดวก ---
 
-# เพิ่ม Model สำหรับบันทึกว่าต้นไม้แต่ละต้นปลูกที่ไหน (เชื่อม Tree กับ PlantingArea)
 class TreePlanting(models.Model):
     tree = models.ForeignKey(Tree, on_delete=models.CASCADE)
     planting_area = models.ForeignKey(PlantingArea, on_delete=models.CASCADE)
-    planted_date = models.DateField(auto_now_add=True)  # วันที่ปลูก
+    planted_date = models.DateField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.tree.name} planted at {self.planting_area.name} on {self.planted_date}"
+
+
+# ✅ อุปกรณ์
+class Equipment(models.Model):
+    name = models.CharField(max_length=100)
+    image_url = models.URLField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return self.name
