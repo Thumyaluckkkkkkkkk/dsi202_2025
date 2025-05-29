@@ -6,7 +6,7 @@ class Tree(models.Model):
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to='trees/', blank=True, null=True)
     care_instructions = models.TextField(help_text="วิธีดูแลต้นไม้ เช่น รดน้ำ ใส่ปุ๋ย")
-    price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)  # ✅ เพิ่มตรงนี้
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
 
     def __str__(self):
         return self.name
@@ -47,7 +47,8 @@ class TreePlanting(models.Model):
 # ✅ อุปกรณ์
 class Equipment(models.Model):
     name = models.CharField(max_length=100)
-    image_url = models.URLField()
+    description = models.TextField(blank=True, null=True)
+    image = models.ImageField(upload_to='equipment_images/', blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):

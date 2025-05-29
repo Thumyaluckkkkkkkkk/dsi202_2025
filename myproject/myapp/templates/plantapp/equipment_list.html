@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="min-h-screen py-12 px-6" style="background: linear-gradient(135deg, #fef9e7, #b2ebf2, #f8bbd0);">
+  <h1 class="text-4xl font-bold text-center text-green-800 mb-10 drop-shadow-sm">
+    🛠️ อุปกรณ์ปลูกต้นไม้
+  </h1>
+
+  <form method="get" action="." class="max-w-md mx-auto mb-10">
+    <div class="flex items-center bg-white rounded-full shadow px-4 py-2">
+      <input 
+        type="text" 
+        name="q" 
+        placeholder="ค้นหาอุปกรณ์..." 
+        value="{{ request.GET.q }}" 
+        class="flex-grow px-4 py-2 focus:outline-none rounded-full text-gray-700"
+      >
+      <button type="submit" class="text-green-600 font-semibold hover:text-green-800">
+        🔍
+      </button>
+    </div>
+  </form>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+    {% for equipment in equipment_list %}
+      <div class="bg-white rounded-2xl shadow-md p-6 flex flex-col items-center text-center hover:shadow-xl transition duration-300">
+        {% if equipment.image %}
+          <img src="{{ equipment.image.url }}" alt="{{ equipment.name }}" class="w-32 h-32 object-cover rounded-xl mb-4">
+        {% else %}
+          <div class="w-32 h-32 bg-gray-100 flex items-center justify-center rounded-xl mb-4 text-gray-400 text-sm">
+            ไม่มีรูป
+          </div>
+        {% endif %}
+        <h2 class="text-xl font-semibold text-green-800">{{ equipment.name }}</h2>
+        <p class="text-gray-600 mt-2 mb-4">฿ {{ equipment.price|floatformat:2 }}</p>
+        <form method="post" action="{% url 'myapp:add_to_cart' %}">
+          {% csrf_token %}
+          <input type="hidden" name="item_id" value="{{ equipment.id }}">
+          <input type="hidden" name="item_type" value="equipment">
+          <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg mt-2">
+            ใส่ตะกร้า
+          </button>
+        </form>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
