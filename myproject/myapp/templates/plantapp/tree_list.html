@@ -2,8 +2,26 @@
 {% load static %}
 
 {% block content %}
-<div class="bg-green-50 min-h-screen py-12 px-6">
-  <h1 class="text-4xl font-bold text-center text-green-800 mb-10">🌳 รายการต้นไม้</h1>
+<div class="min-h-screen py-12 px-6" style="background: linear-gradient(135deg, #fef9e7, #b2ebf2, #f8bbd0);">
+  <h1 class="text-4xl font-bold text-center text-green-800 mb-10 drop-shadow-sm">
+    🌿 รายการต้นไม้
+  </h1>
+
+  <!-- ✅ ช่องค้นหา -->
+  <form method="get" action="." class="max-w-md mx-auto mb-10">
+    <div class="flex items-center bg-white rounded-full shadow px-4 py-2">
+      <input 
+        type="text" 
+        name="q" 
+        placeholder="ค้นหาต้นไม้..." 
+        value="{{ request.GET.q }}" 
+        class="flex-grow px-4 py-2 focus:outline-none rounded-full text-gray-700"
+      >
+      <button type="submit" class="text-green-600 font-semibold hover:text-green-800">
+        🔍
+      </button>
+    </div>
+  </form>
 
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
     {% for tree in trees %}
@@ -15,9 +33,9 @@
             ไม่มีรูป
           </div>
         {% endif %}
-        <h2 class="text-xl font-semibold text-green-700">{{ tree.name }}</h2>
+        <h2 class="text-xl font-semibold text-green-800">{{ tree.name }}</h2>
         <p class="text-gray-600 mt-2 mb-4">฿ {{ tree.price|floatformat:2 }}</p>
-        <a href="{% url 'myapp:tree_detail' tree.id %}" class="mt-auto bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg">
+        <a href="{% url 'myapp:tree_detail' tree.id %}" class="mt-auto bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg">
           ดูรายละเอียด
         </a>
       </div>
@@ -25,3 +43,4 @@
   </div>
 </div>
 {% endblock %}
+

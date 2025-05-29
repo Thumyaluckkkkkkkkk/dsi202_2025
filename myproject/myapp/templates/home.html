@@ -1,139 +1,87 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Plook Jing - Home</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #2E742B 0%, #D4F5C4 100%);
-    }
 
-    .hero {
-      position: relative;
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      padding: 80px 60px;
-      height: 100vh;
-      box-sizing: border-box;
-    }
+{% block content %}
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow-x: hidden;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(to right, #2E742B 0%, #D4F5C4 100%);
+  }
 
-    .rounded-bg {
-      position: absolute;
-      right: 0;
-      bottom: 0;
-      width: 52%;
-      height: calc(100% - 100px);
-      background-color: #ffffff;
-      border-top-left-radius: 180px;
-      border-bottom-left-radius: 0px;
-      z-index: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+  .hero {
+    position: relative;
+    display: flex;
+    align-items: flex-start; /* ✅ ข้อความขยับขึ้นบน */
+    justify-content: space-between;
+    padding: 80px 60px;
+    height: 100vh;
+    box-sizing: border-box;
+  }
 
-    .tree-image {
-      max-width: 90%;
-      max-height: 100%;
-      object-fit: contain;
-    }
+  .tree-image {
+    max-width: 45vw;
+    max-height: 80vh;
+    object-fit: contain;
+    z-index: 0;
+  }
 
-    .hero-text {
-      position: relative;
-      z-index: 1;
-      color: white;
-      max-width: 50%;
-      margin-top: 80px;
-    }
+  .hero-text {
+    position: relative;
+    z-index: 1;
+    color: #1E1E1E; /* ✅ สีเข้มขึ้น */
+    max-width: 50%;
+    text-align: left;
+    margin-top: 20px; /* ✅ ขยับใกล้บน */
+  }
 
-    .hero-text h1 {
-      font-size: 4.5rem;
-      margin: 0;
-      font-weight: bold;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-    }
+  .hero-text h1 {
+    font-size: 4.5rem;
+    margin: 0;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #123D1A; /* ✅ เขียวเข้มขึ้น */
+  }
 
-    .hero-text p {
-      font-size: 1.25rem;
-      margin-top: 20px;
-      max-width: 480px;
-    }
+  .hero-text p {
+    font-size: 1.25rem;
+    margin-top: 20px;
+    max-width: 480px;
+    color: #2E4B29; /* ✅ เขียวเข้ม อ่านง่าย */
+  }
 
-    .button {
-      display: inline-block;
-      margin-top: 50px;
-      padding: 14px 32px;
-      background-color: transparent;
-      color: #FFD700;
-      border: 2px solid #FFD700;
-      font-weight: bold;
-      border-radius: 32px;
-      transition: all 0.3s ease;
-      text-decoration: none;
-      cursor: pointer;
-    }
+  .button {
+    display: inline-block;
+    margin-top: 40px;
+    padding: 14px 32px;
+    background-color: #00A86B;
+    color: #fff;
+    border: 2px solid #fff;
+    font-weight: bold;
+    border-radius: 32px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  }
 
-    .button:hover {
-      background-color: rgba(255, 215, 0, 0.1);
-      color: black;
-    }
+  .button:hover {
+    background-color: #FFD700;
+    color: #1E5128;
+    border-color: #1E5128;
+  }
+</style>
 
-    .auth-bar {
-      position: absolute;
-      top: 20px;
-      right: 40px;
-      z-index: 999;
-    }
-
-    .auth-bar a {
-      padding: 10px 20px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    .login-btn {
-      background-color: #2e742b;
-      color: white;
-    }
-
-    .logout-btn {
-      background-color: white;
-      color: #2e742b;
-      border: 2px solid #2e742b;
-    }
-  </style>
-</head>
-<body>
-
-  <!-- ✅ ปุ่ม Login/Logout -->
-  <div class="auth-bar">
-    {% if user.is_authenticated %}
-      <a href="{% url 'logout' %}" class="logout-btn">Log out</a>
-    {% else %}
-      <a href="{% url 'login' %}" class="login-btn">Log in</a>
-    {% endif %}
+<div class="hero">
+  <div class="hero-text">
+    <h1>PLOOKJING</h1>
+    <p>The fascinating and meaningful world of tree planting. Let nature thrive with you, beautifully and sustainably.</p>
+    <a href="{% url 'myapp:shop' %}" class="button">🌿 Shop Now</a>
   </div>
 
-  <div class="hero">
-    <div class="rounded-bg">
-      <img src="{% static 'myapp/images/tree.png' %}" alt="Tree Image" class="tree-image">
-    </div>
-
-    <div class="hero-text">
-      <h1>PLOOK JING</h1>
-      <p>The fascinating and meaningful world of tree planting. Let nature thrive with you, beautifully and sustainably.</p>
-      <!-- ✅ เปลี่ยนลิงก์มาที่ shop -->
-      <a href="{% url 'myapp:shop' %}" class="button">Shop Now</a>
-    </div>
-  </div>
-
-</body>
-</html>
+  <img src="{% static 'myapp/images/tree.png' %}" alt="Tree Image" class="tree-image">
+</div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="min-h-screen py-12 px-6 bg-green-50">
+  <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow p-8 flex flex-col md:flex-row items-center gap-8">
+    
+    <!-- รูปภาพ -->
+    {% if tree.image %}
+      <img src="{{ tree.image.url }}" alt="{{ tree.name }}" class="w-64 h-64 object-cover rounded-xl shadow">
+    {% else %}
+      <div class="w-64 h-64 bg-gray-100 flex items-center justify-center rounded-xl text-gray-400 text-sm">
+        ไม่มีรูป
+      </div>
+    {% endif %}
+
+    <!-- ข้อมูลต้นไม้ -->
+    <div class="flex-1 w-full">
+      <h1 class="text-3xl font-bold text-green-800">{{ tree.name }}</h1>
+      <p class="text-gray-700 mt-2 mb-4">ราคา: ฿ {{ tree.price|floatformat:2 }}</p>
+      <p class="text-gray-600">{{ tree.description }}</p>
+
+      <!-- ✅ ปุ่มใส่ตะกร้า อยู่ริมขวา -->
+      <div class="mt-6 flex justify-end">
+        <form method="post" action="{% url 'myapp:add_to_cart' %}">
+          {% csrf_token %}
+          <input type="hidden" name="item_id" value="{{ tree.id }}">
+          <input type="hidden" name="item_type" value="tree">
+          <button type="submit" class="border-2 border-orange-500 text-orange-600 font-semibold px-6 py-2 rounded-lg hover:bg-orange-100 transition">
+            🧺 ใส่ตะกร้า
+          </button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

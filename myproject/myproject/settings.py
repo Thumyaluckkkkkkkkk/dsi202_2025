@@ -73,13 +73,16 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# ✅ Static files
+# ✅ Static files (CSS, JS)
 STATIC_URL = '/static/'
-
-# ✅ ให้ Django มอง static ที่อยู่ในโฟลเดอร์กลางระดับ project
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',  # ← ตรงกับ static/images/tree.jpg
+    BASE_DIR / 'static',
 ]
+
+# ✅ Media files (เช่นรูปต้นไม้จาก ImageField)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # ✅ Auto primary key
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+

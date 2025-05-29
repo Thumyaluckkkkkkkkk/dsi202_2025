@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto bg-white shadow-lg rounded-2xl p-8 mt-10">
+  <h1 class="text-2xl font-bold text-green-800 mb-6">🛒 ตะกร้าของคุณ</h1>
+
+  {% if cart_items %}
+    <form id="cart-form" method="post" action="{% url 'myapp:checkout' %}">
+      {% csrf_token %}
+      <div class="mb-4">
+        <label class="inline-flex items-center space-x-2">
+          <input type="checkbox" id="select-all" class="form-checkbox h-5 w-5 text-green-600">
+          <span class="text-gray-700 font-medium">เลือกสินค้าทั้งหมด</span>
+        </label>
+      </div>
+
+      <div class="space-y-6">
+        {% for item in cart_items %}
+          <div class="flex items-center justify-between border-b pb-4">
+            <div class="flex items-center space-x-4">
+              <input type="checkbox" name="selected_items" value="{{ item.index }}" class="item-checkbox h-5 w-5 text-green-600">
+              {% if item.image %}
+                <img src="{{ item.image }}" class="w-20 h-20 object-cover rounded-xl">
+              {% else %}
+                <div class="w-20 h-20 bg-gray-100 flex items-center justify-center rounded-xl text-gray-400 text-sm">ไม่มีรูป</div>
+              {% endif %}
+              <div>
+                <h2 class="text-lg font-semibold text-gray-800">{{ item.name }}</h2>
+                <p class="text-gray-500">฿{{ item.price|floatformat:2 }}</p>
+              </div>
+            </div>
+            <button type="button" onclick="removeFromCart({{ item.index }})" class="text-red-500 hover:text-red-700 font-medium">✕ ลบ</button>
+          </div>
+        {% endfor %}
+      </div>
+
+      <div class="mt-8 flex justify-between items-center">
+        <div class="text-gray-700 text-lg font-semibold">
+          ราคารวมที่เลือก: <span id="total-price">฿0.00</span>
+        </div>
+        <button type="submit" class="bg-green-500 text-white font-semibold px-6 py-2 rounded-lg hover:bg-green-600">
+          ไปชำระเงิน
+        </button>
+      </div>
+    </form>
+  {% else %}
+    <p class="text-gray-500">ยังไม่มีสินค้าในตะกร้า</p>
+  {% endif %}
+</div>
+
+<script>
+  const selectAll = document.getElementById('select-all');
+  const checkboxes = document.querySelectorAll('.item-checkbox');
+  const totalPriceEl = document.getElementById('total-price');
+
+  function updateTotal() {
+    let total = 0;
+    {% for item in cart_items %}
+      if (document.querySelector('.item-checkbox[value="{{ item.index }}"]').checked) {
+        total += parseFloat({{ item.price }});
+      }
+    {% endfor %}
+    totalPriceEl.textContent = '฿' + total.toFixed(2);
+  }
+
+  selectAll.addEventListener('change', function () {
+    checkboxes.forEach(cb => cb.checked = this.checked);
+    updateTotal();
+  });
+
+  checkboxes.forEach(cb => cb.addEventListener('change', updateTotal));
+
+  function removeFromCart(index) {
+    if (confirm("คุณแน่ใจว่าต้องการลบสินค้านี้?")) {
+      fetch(`/cart/remove/${index}/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': '{{ csrf_token }}'
+        }
+      }).then(response => {
+        if (response.redirected) {
+          window.location.href = response.url;
+        } else {
+          location.reload();
+        }
+      });
+    }
+  }
+</script>
+{% endblock %}
+
+
