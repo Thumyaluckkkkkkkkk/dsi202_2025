@@ -60,13 +60,13 @@ pip install -r requirements.txt
 
 4. ตั้งค่าไฟล์ .env
 สร้างไฟล์ชื่อ .env แล้วใส่ค่าต่อไปนี้:
-
 ini
 Copy
 Edit
 DEBUG=True  
 SECRET_KEY=your-secret-key  
 ALLOWED_HOSTS=127.0.0.1,localhost
+
 5. Migrate และสร้าง Superuser
 python manage.py migrate
 python manage.py createsuperuser
