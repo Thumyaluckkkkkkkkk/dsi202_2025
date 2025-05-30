@@ -6,7 +6,7 @@
   <h1 class="text-2xl font-bold text-green-800 mb-6">🛒 ตะกร้าของคุณ</h1>
 
   {% if cart_items %}
-    <form id="cart-form" method="post" action="{% url 'myapp:checkout' %}">
+    <form id="cart-form" method="post" action="{% url 'myapp:confirm_cart' %}">
       {% csrf_token %}
       <div class="mb-4">
         <label class="inline-flex items-center space-x-2">
@@ -19,7 +19,12 @@
         {% for item in cart_items %}
           <div class="flex items-center justify-between border-b pb-4">
             <div class="flex items-center space-x-4">
-              <input type="checkbox" name="selected_items" value="{{ item.index }}" class="item-checkbox h-5 w-5 text-green-600">
+              <input type="checkbox"
+                     name="selected_items"
+                     value="{{ item.index }}"
+                     class="item-checkbox h-5 w-5 text-green-600"
+                     data-price="{{ item.price }}"
+                     data-quantity="{{ item.quantity }}">
               {% if item.image %}
                 <img src="{{ item.image }}" class="w-20 h-20 object-cover rounded-xl">
               {% else %}
@@ -27,7 +32,7 @@
               {% endif %}
               <div>
                 <h2 class="text-lg font-semibold text-gray-800">{{ item.name }}</h2>
-                <p class="text-gray-500">฿{{ item.price|floatformat:2 }}</p>
+                <p class="text-gray-500">฿{{ item.price|floatformat:2 }} × {{ item.quantity }}</p>
               </div>
             </div>
             <button type="button" onclick="removeFromCart({{ item.index }})" class="text-red-500 hover:text-red-700 font-medium">✕ ลบ</button>
@@ -40,7 +45,7 @@
           ราคารวมที่เลือก: <span id="total-price">฿0.00</span>
         </div>
         <button type="submit" class="bg-green-500 text-white font-semibold px-6 py-2 rounded-lg hover:bg-green-600">
-          ไปชำระเงิน
+          ยืนยันรายการ
         </button>
       </div>
     </form>
@@ -56,11 +61,13 @@
 
   function updateTotal() {
     let total = 0;
-    {% for item in cart_items %}
-      if (document.querySelector('.item-checkbox[value="{{ item.index }}"]').checked) {
-        total += parseFloat({{ item.price }});
+    checkboxes.forEach(cb => {
+      if (cb.checked) {
+        const price = parseFloat(cb.dataset.price);
+        const qty = parseInt(cb.dataset.quantity);
+        total += price * qty;
       }
-    {% endfor %}
+    });
     totalPriceEl.textContent = '฿' + total.toFixed(2);
   }
 
@@ -73,7 +80,7 @@
 
   function removeFromCart(index) {
     if (confirm("คุณแน่ใจว่าต้องการลบสินค้านี้?")) {
-      fetch(`/cart/remove/${index}/`, {
+      fetch(`/remove-from-cart/${index}/`, {
         method: 'POST',
         headers: {
           'X-CSRFToken': '{{ csrf_token }}'
@@ -87,7 +94,11 @@
       });
     }
   }
+
+  // คำนวณราคารวมเริ่มต้น
+  updateTotal();
 </script>
 {% endblock %}
+
 
 

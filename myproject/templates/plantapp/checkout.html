@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto bg-white rounded-2xl shadow p-8 mt-10">
+  <h1 class="text-2xl font-bold text-green-800 mb-6 text-center">📦 ตรวจสอบรายการก่อนชำระเงิน</h1>
+
+  {% if items %}
+    <ul class="divide-y divide-gray-200 mb-6">
+      {% for item in items %}
+        <li class="py-4 flex items-center space-x-4">
+          {% if item.image %}
+            <img src="{{ item.image }}" alt="{{ item.name }}" class="w-16 h-16 rounded-xl object-cover">
+          {% else %}
+            <div class="w-16 h-16 bg-gray-100 rounded-xl flex items-center justify-center text-gray-400 text-sm">ไม่มีรูป</div>
+          {% endif %}
+          <div class="flex-1">
+            <h2 class="font-semibold text-gray-800">{{ item.name }}</h2>
+            <p class="text-gray-500">จำนวน: {{ item.quantity }}</p>
+            <p class="text-gray-500">฿{{ item.price|floatformat:2 }}</p>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+
+    <!-- พื้นที่ปลูก -->
+    <div class="bg-gray-50 p-4 rounded-lg mb-6">
+      <h3 class="text-lg font-semibold text-green-700 mb-1">📍 พื้นที่ปลูกต้นไม้</h3>
+      <p class="text-gray-700 font-medium">จังหวัด: {{ location }}</p>
+      <p class="text-gray-600 text-sm">{{ location_desc }}</p>
+    </div>
+
+    <!-- QR PromptPay -->
+    <div class="text-center mt-6 mb-6">
+      <h2 class="text-lg font-semibold text-green-700 mb-2">🔍 สแกนจ่ายด้วย PromptPay</h2>
+      <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code" class="mx-auto w-64 h-64 rounded-lg shadow-md">
+    </div>
+
+    <!-- ราคารวม -->
+    <div class="text-center text-lg font-bold text-gray-800 mb-6">
+      💰 ราคารวมทั้งหมด: ฿{{ total|floatformat:2 }}
+    </div>
+
+    <!-- ปุ่มยืนยัน -->
+    <div class="text-center">
+      <form action="{% url 'myapp:confirm_payment' %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-8 rounded-lg shadow">
+          ✅ ยืนยันการชำระเงิน
+        </button>
+      </form>
+    </div>
+  {% else %}
+    <p class="text-center text-gray-500">ไม่มีสินค้าที่เลือกไว้สำหรับชำระเงิน</p>
+  {% endif %}
+</div>
+{% endblock %}
+
+
+

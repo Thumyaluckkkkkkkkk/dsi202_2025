@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Tree, PlantingArea, PlantingPlan, Equipment  # ✅ import รวม
+from .models import Tree, PlantingArea, PlantingPlan, Equipment
 
 @admin.register(Tree)
 class TreeAdmin(admin.ModelAdmin):
@@ -7,11 +7,12 @@ class TreeAdmin(admin.ModelAdmin):
     search_fields = ('name',)
     fields = ('name', 'description', 'image', 'price')
 
+# ✅ ปรับ PlantingArea ให้เป็น Tree Location (ไม่ใช้ image)
 @admin.register(PlantingArea)
-class PlantingAreaAdmin(admin.ModelAdmin):
-    list_display = ('name', 'location', 'user')
-    search_fields = ('name', 'location')
-    list_filter = ('user',)
+class TreeLocationAdmin(admin.ModelAdmin):
+    list_display = ('province',)
+    search_fields = ('province',)
+    fields = ('province', 'description')  # เอา image ออกแล้ว
 
 @admin.register(PlantingPlan)
 class PlantingPlanAdmin(admin.ModelAdmin):
@@ -23,3 +24,5 @@ class EquipmentAdmin(admin.ModelAdmin):
     list_display = ('name', 'price')
     search_fields = ('name',)
     fields = ('name', 'description', 'image', 'price')
+
+

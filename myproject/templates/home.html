@@ -23,11 +23,13 @@
   }
 
   .tree-image {
-    max-width: 45vw;
-    max-height: 80vh;
-    object-fit: contain;
-    z-index: 0;
-  }
+  max-width: 60vw;
+  max-height: 90vh;
+  object-fit: contain;
+  z-index: 0;
+  align-self: flex-start;
+  margin-top: -20px;
+}
 
   .hero-text {
     position: relative;
@@ -82,6 +84,6 @@
     <a href="{% url 'myapp:shop' %}" class="button">🌿 Shop Now</a>
   </div>
 
-  <img src="{% static 'myapp/images/tree.png' %}" alt="Tree Image" class="tree-image">
+  <img src="{% static 'myapp/images/tree new.png' %}" alt="Tree Image" class="tree-image">
 </div>
 {% endblock %}
