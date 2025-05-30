@@ -1,20 +1,28 @@
+import libscrc
 import base64
 import io
 import qrcode
 
+from django.db.models import Q 
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Tree, Equipment, PlantingArea, UserTreeOrder
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.utils import timezone
 
-
 def home(request):
     return render(request, 'home.html')
 
 def tree_list(request):
-    trees = Tree.objects.all()
-    return render(request, 'plantapp/tree_list.html', {'trees': trees})
+    query = request.GET.get("q", "")
+    if query:
+        trees = Tree.objects.filter(Q(name__icontains=query) | Q(description__icontains=query))
+    else:
+        trees = Tree.objects.all()
+    return render(request, 'plantapp/tree_list.html', {
+        'trees': trees,
+        'query': query,
+    })
 
 @login_required
 def tree_detail(request, tree_id):
@@ -83,19 +91,16 @@ def confirm_cart(request):
     cart = request.session.get('cart', [])
     selected_indexes = request.POST.getlist('selected_items')
 
-    # แปลง index จาก str เป็น int แล้วเลือกเฉพาะสินค้าที่ติ๊ก
     selected_indexes = [int(i) for i in selected_indexes if i.isdigit()]
     selected_items = [item for idx, item in enumerate(cart) if idx in selected_indexes]
 
-    # เซฟสินค้าที่ถูกเลือกไว้ใน checkout_cart
     request.session['checkout_cart'] = selected_items
 
-    # ตรวจว่ามี tree ไหม → ไปหน้าเลือกพื้นที่ปลูกต้นไม้
     has_tree = any(item['type'] == 'tree' for item in selected_items)
     if has_tree:
         return redirect('myapp:tree_location_list')
     else:
-        return redirect('myapp:equipment_order')  # หรือเปลี่ยนตาม flow คุณ
+        return redirect('myapp:equipment_list')
 
 @login_required
 def tree_location_list(request):
@@ -119,8 +124,10 @@ def select_location_for_tree(request):
     return redirect('myapp:checkout')
 
 def generate_qr_base64(phone_number, amount):
-    qr_text = f"00020101021129370016A0000006770101110213{phone_number}53037645402{int(amount*100):02d}5802TH6304"
-    img = qrcode.make(qr_text)
+    payload = f"00020101021129370016A00000067701011101130066{phone_number[1:]}530376454{len(f'{amount:.2f}'):02d}{amount:.2f}5802TH6304"
+    crc = libscrc.ccitt_false(payload.encode('ascii')).to_bytes(2, 'big').hex().upper()
+    final_payload = payload + crc
+    img = qrcode.make(final_payload)
     buffer = io.BytesIO()
     img.save(buffer, format="PNG")
     return base64.b64encode(buffer.getvalue()).decode('utf-8')
@@ -133,7 +140,6 @@ def checkout(request):
     location = request.session.get('tree_location', 'ไม่ระบุ')
     location_desc = request.session.get('tree_location_description', '')
 
-    # ✅ เพิ่ม QR Code
     qr_code = generate_qr_base64("0944245565", total)
 
     return render(request, 'plantapp/checkout.html', {
@@ -159,11 +165,10 @@ def confirm_payment(request):
                     tree_id=item['id'],
                     quantity=item['quantity'],
                     planting_area=planting_area,
-                    status='pending',  # ใช้ค่าใน choices ของ models
+                    status='pending',
                     order_date=timezone.now()
                 )
 
-    # ล้างตะกร้าหลังสั่งซื้อเสร็จ
     request.session['cart'] = []
     request.session['checkout_cart'] = []
 
@@ -184,7 +189,6 @@ def shop_page(request):
 def notifications(request):
     orders = UserTreeOrder.objects.filter(user=request.user).order_by('-order_date')
     return render(request, 'plantapp/notifications.html', {'orders': orders})
-
 
 
 
